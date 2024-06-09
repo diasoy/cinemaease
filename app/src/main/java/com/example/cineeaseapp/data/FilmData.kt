@@ -25,12 +25,12 @@ class FilmData(context: Context) {
         R.drawable.doctor_strange,
         R.drawable.end_game
     )
-    private val filmRatings = arrayOf(
-        "4.9 / 5",
-        "4.8 / 5",
-        "4.7 / 5",
-        "4.6 / 5",
-        "4.5 / 5"
+    private val filmRatings = doubleArrayOf(
+        4.9,
+        4.8,
+        4.7,
+        4.6,
+        4.5
     )
     private val filmReleaseYears = intArrayOf(
         2015,
@@ -65,7 +65,7 @@ class FilmData(context: Context) {
                     rating = filmRatings[position],
                     tahun = filmReleaseYears[position],
                     genre = filmGenres[position],
-                    harga = filmPrices[position].toString()
+                    harga = filmPrices[position]
                 )
                 list.add(film)
             }

@@ -1,7 +1,8 @@
 package com.example.cineeaseapp.screen
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,6 @@ class DetailFilmScreen : AppCompatActivity() {
         const val EXTRA_FILM = "extra_film"
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_film_screen)
@@ -28,6 +28,7 @@ class DetailFilmScreen : AppCompatActivity() {
         val tvYear: TextView = findViewById(R.id.tv_year)
         val tvGenre: TextView = findViewById(R.id.tv_genre)
         val tvPrice: TextView = findViewById(R.id.tv_price)
+        val btnBuyTicket: Button = findViewById(R.id.btn_buy_ticket)
 
         imgPoster.setImageResource(film?.poster ?: 0)
         tvTitle.text = film?.judul
@@ -36,5 +37,11 @@ class DetailFilmScreen : AppCompatActivity() {
         tvYear.text = "Year \n${film?.tahun ?: "N/A"}"
         tvGenre.text = "Genre \n${film?.genre ?: "N/A"}"
         tvPrice.text = "Harga ticket: Rp. ${film?.harga ?: "N/A"}"
+
+        btnBuyTicket.setOnClickListener {
+            val intent = Intent(this, SeatSelectorScreen::class.java)
+            intent.putExtra(SeatSelectorScreen.EXTRA_FILM, film)
+            startActivity(intent)
+        }
     }
 }

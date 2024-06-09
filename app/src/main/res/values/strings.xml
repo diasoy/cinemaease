@@ -69,5 +69,9 @@
     <string name="snack_price">Snack Price</string>
     <string name="buy_button">Buy</string>
     <string name="snacks">Snacks</string>
+    <string name="total_price_0">Total Harga: $0</string>
+    <string name="select_seat">Select Seat</string>
+    <string name="continue0">Continue</string>
+    <string name="layar_bioskop">Layar Bioskop</string>
 
 </resources>
