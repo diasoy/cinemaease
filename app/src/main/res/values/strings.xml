@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">CINE EASE</string>
+    <string name="buy">Buy</string>
+    <string name="price_format">Harga: Rp. %1$d</string>
+
+    <string name="user_name">Hello, Dias Welcome Back!</string>
+    <string name="user_text">Selamat menonton film kesukaan kamu!</string>
+
+    <string name="title_main">Film Sedang Tayang</string>
+
+    <string name="film_name1">Ant Man</string>
+    <string name="film_description1">Seorang ilmuwan brilian yang memperkecil dirinya menjadi superhero, bertarung melawan kejahatan dengan kekuatan seukuran semut. Tapi apakah dia cukup kecil untuk menghadapi ancaman yang sebenarnya?</string>
+
+    <string name="film_name2">Black Panther</string>
+    <string name="film_description2">Di negeri maju Wakanda, seorang pangeran muda harus melawan musuh-musuh yang mengancam takhta dan keamanan negerinya. Dengan teknologi canggih dan kekuatan panter legendaris, dia berdiri sebagai pelindung yang tak tertandingi.</string>
+
+    <string name="film_name3">Captain Marvel</string>
+    <string name="film_description3">Seorang pilot militer yang berani secara misterius mendapatkan kekuatan kosmik yang tak terbatas, mengubahnya menjadi pahlawan luar angkasa yang kuat. Tapi ketika ancaman dari luar angkasa datang, dia harus memahami asal-usul kekuatannya untuk menyelamatkan bumi.</string>
+
+    <string name="film_name4">Doctor Strange</string>
+    <string name="film_description4">Seorang ahli bedah yang brilian dan sombong mendapatkan kekuatan sihir setelah mengalami kecelakaan yang menghancurkan karirnya. Dia belajar di bawah bimbingan seorang penyihir tua untuk melindungi dunia dari ancaman supernatural.</string>
+
+    <string name="film_name5">End Game</string>
+    <string name="film_description5">Setelah kekalahan telak, para pahlawan terakhir bumi harus menghadapi kekalahan terbesar mereka. Dengan kekuatan terakhir yang tersisa, mereka harus berani melakukan perjalanan waktu untuk mengubah masa depan yang sudah ditentukan.</string>
+
+
+    <string name="snack_name1">Bucket Popcorn</string>
+    <string name="snack_name2">Box Popcorn</string>
+    <string name="snack_name3">Coca Cola</string>
+    <string name="snack_name4">Ice Chocolate</string>
+
+    <string name="snack_description1">
+        Popcorn dalam ukuran besar yang cocok untuk dinikmati bersama teman-teman saat menonton film. Dengan rasa gurih yang lezat, popcorn ini akan membuat film semakin seru!
+    </string>
+    <string name="snack_description2">
+        Popcorn dalam ukuran kecil yang cocok untuk dinikmati sendiri saat menonton film. Dengan rasa gurih yang lezat, popcorn ini akan membuat film semakin seru!
+    </string>
+    <string name="snack_description3">
+        Minuman coklat dingin yang segar dan manis, cocok untuk dinikmati saat menonton film. Dengan rasa coklat yang khas, minuman ini akan membuat film semakin seru!
+    </string>
+    <string name="snack_description4">
+        Minuman soda yang segar dan manis, cocok untuk dinikmati saat menonton film. Dengan rasa soda yang khas, minuman ini akan membuat film semakin seru!
+    </string>
+
+    <string name="snack_price1">Rp 25.000</string>
+    <string name="snack_price2">Rp 15.000</string>
+    <string name="snack_price3">Rp 20.000</string>
+    <string name="snack_price4">Rp 10.000</string>
+
+    <string name="snack_button">Buy</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile">Order</string>
+    <string name="snack">Snack</string>
+    <string name="film">Film</string>
+    <string name="hello_snack">Ini fragment snack</string>
+    <string name="hello_film">Ini fragment film</string>
+    <string name="hello_order">Order</string>
+    <string name="category_name1">Animation</string>
+    <string name="category_name2">Horror</string>
+    <string name="category_name3">Action</string>
+    <string name="category_name4">Comedy</string>
+    <string name="category_name5">Romance</string>
+    <string name="btn_buy_ticket">Buy Ticket</string>
+    <string name="tahun">Tahun</string>
+    <string name="genre">Genre</string>
+    <string name="rating">Rating</string>
+    <string name="snack_name">Snack Name</string>
+    <string name="snack_price">Snack Price</string>
+    <string name="buy_button">Buy</string>
+    <string name="snacks">Snacks</string>
+
+</resources>
