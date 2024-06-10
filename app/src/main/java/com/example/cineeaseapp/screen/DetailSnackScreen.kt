@@ -37,6 +37,10 @@ class DetailSnackScreen : AppCompatActivity() {
             totalTextView.text = getString(R.string.price_format, total)
         }
 
+        // Set default total price
+        val initialTotal = snack.price
+        totalTextView.text = getString(R.string.price_format, initialTotal)
+
         buyButton.setOnClickListener {
             val quantity = quantityPicker.value
             val total = quantity * snack.price
