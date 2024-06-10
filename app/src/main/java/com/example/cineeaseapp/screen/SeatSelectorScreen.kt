@@ -33,7 +33,7 @@ class SeatSelectorScreen : AppCompatActivity() {
         // Create seat buttons for left grid (A1 - H4)
         createSeatButtons(R.id.seat_grid_left, 'A', 1)
 
-        // Create seat buttons for right grid (A5 - H6)
+        // Create seat buttons for right grid (A5 - H8)
         createSeatButtons(R.id.seat_grid_right, 'A', 5)
 
         btnContinue.setOnClickListener {
@@ -41,11 +41,12 @@ class SeatSelectorScreen : AppCompatActivity() {
         }
     }
 
-
     private fun createSeatButtons(gridId: Int, startingRow: Char, startingCol: Int) {
         val seatGrid: GridLayout = findViewById(gridId)
         val rows = seatGrid.rowCount
         val cols = seatGrid.columnCount
+        val seatSize = resources.getDimensionPixelSize(R.dimen.seat_button_size)
+        val seatMargin = resources.getDimensionPixelSize(R.dimen.seat_button_margin)
 
         for (i in 0 until rows) {
             for (j in 0 until cols) {
@@ -53,15 +54,20 @@ class SeatSelectorScreen : AppCompatActivity() {
                     val seatText = "${(startingRow.toInt() + i).toChar()}${startingCol + j}"
                     text = seatText
                     setBackgroundColor(Color.WHITE)
+                    setTextSize(10f)  // Set the text size to 10sp
                     setOnClickListener {
                         toggleSeatSelection(this)
+                    }
+                    layoutParams = GridLayout.LayoutParams().apply {
+                        width = seatSize
+                        height = seatSize
+                        setMargins(seatMargin, seatMargin, seatMargin, seatMargin)
                     }
                 }
                 seatGrid.addView(seatButton)
             }
         }
     }
-
 
     private fun toggleSeatSelection(seatButton: Button) {
         if (selectedSeatSet.contains(seatButton)) {

@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="seat_button_size">32dp</dimen>
+    <dimen name="seat_button_margin">4dp</dimen>
+</resources>
