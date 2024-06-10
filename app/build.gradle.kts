@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("me.relex:circleindicator:2.1.6")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

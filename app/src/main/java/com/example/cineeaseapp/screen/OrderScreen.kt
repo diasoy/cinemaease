@@ -1,30 +1,39 @@
-package com.example.cineeaseapp.screen
-
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cineeaseapp.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [OrderScreen.newInstance] factory method to
- * create an instance of this fragment.
- */
+import com.example.cineeaseapp.adapter.OrderAdapter
+import com.example.cineeaseapp.data.DatabaseHandlerFilm
+import com.example.cineeaseapp.data.DatabaseHandlerSnack
+import com.example.cineeaseapp.data.OrderItem
 
 class OrderScreen : Fragment() {
+
+    private lateinit var orderAdapter: OrderAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order_screen, container, false)
+        val view = inflater.inflate(R.layout.fragment_order_screen, container, false)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.order_recycler_view)
+
+        val dbFilm = DatabaseHandlerFilm(requireContext())
+        val dbSnack = DatabaseHandlerSnack(requireContext())
+        val orderListTicket = dbFilm.getAllOrdersTicket().map { OrderItem.TicketOrder(it) }
+        val orderListSnack = dbSnack.getAllOrdersSnack().map { OrderItem.SnackOrder(it) }
+        val orderList = orderListTicket + orderListSnack
+
+        orderAdapter = OrderAdapter(orderList)
+
+        recyclerView.adapter = orderAdapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        return view
     }
 }

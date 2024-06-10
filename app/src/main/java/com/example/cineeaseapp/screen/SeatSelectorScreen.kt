@@ -1,43 +1,40 @@
 package com.example.cineeaseapp.screen
 
+import OrderScreen
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cineeaseapp.R
+import com.example.cineeaseapp.data.DatabaseHandlerFilm
 import com.example.cineeaseapp.data.Film
+import com.example.cineeaseapp.screen.DetailFilmScreen.Companion.EXTRA_FILM
 
 class SeatSelectorScreen : AppCompatActivity() {
 
-    companion object {
-        const val EXTRA_FILM = "extra_film"
-    }
-
-    private lateinit var tvTotalPrice: TextView
+    private lateinit var film: Film
     private var selectedSeats: Int = 0
-    private var seatPrice: Int = 0
     private val selectedSeatSet = mutableSetOf<Button>()
+    private lateinit var tvTotalPrice: TextView // Move the declaration to the class scope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seat_selector)
 
-        val film = intent.getParcelableExtra<Film>(EXTRA_FILM)
-        seatPrice = film?.harga ?: 0
+        film = intent.getParcelableExtra<Film>(EXTRA_FILM)!!
 
-        tvTotalPrice = findViewById(R.id.tv_total_price)
+        tvTotalPrice = findViewById(R.id.tv_total_price) // Initialize tvTotalPrice here
         val btnContinue: Button = findViewById(R.id.btn_continue)
 
-        // Create seat buttons for left grid (A1 - H4)
         createSeatButtons(R.id.seat_grid_left, 'A', 1)
-
-        // Create seat buttons for right grid (A5 - H8)
         createSeatButtons(R.id.seat_grid_right, 'A', 5)
 
         btnContinue.setOnClickListener {
-            // Handle the continue action, e.g., navigate to the next screen or show a confirmation
+            saveTicketOrderToDatabase()
         }
     }
 
@@ -54,7 +51,7 @@ class SeatSelectorScreen : AppCompatActivity() {
                     val seatText = "${(startingRow.toInt() + i).toChar()}${startingCol + j}"
                     text = seatText
                     setBackgroundColor(Color.WHITE)
-                    setTextSize(10f)  // Set the text size to 10sp
+                    setTextSize(10f)
                     setOnClickListener {
                         toggleSeatSelection(this)
                     }
@@ -71,12 +68,10 @@ class SeatSelectorScreen : AppCompatActivity() {
 
     private fun toggleSeatSelection(seatButton: Button) {
         if (selectedSeatSet.contains(seatButton)) {
-            // Deselect the seat
             seatButton.setBackgroundColor(Color.WHITE)
             selectedSeatSet.remove(seatButton)
             selectedSeats--
         } else {
-            // Select the seat
             seatButton.setBackgroundColor(Color.YELLOW)
             selectedSeatSet.add(seatButton)
             selectedSeats++
@@ -84,8 +79,23 @@ class SeatSelectorScreen : AppCompatActivity() {
         updateTotalPrice()
     }
 
+
     private fun updateTotalPrice() {
-        val totalPrice = selectedSeats * seatPrice
+        val totalPrice = selectedSeats * film.harga
         tvTotalPrice.text = "Total Price: Rp. $totalPrice"
+    }
+
+    private fun saveTicketOrderToDatabase() {
+        val db = DatabaseHandlerFilm(this)
+        val selectedSeatString = selectedSeatSet.joinToString(", ") { it.text.toString() }
+        val totalPrice = selectedSeats * film.harga
+        val orderId = db.addOrderTicket(film.judul, film.poster.toString(), selectedSeatString, totalPrice) // Convert film.poster to String
+        if (orderId != -1L) {
+            Toast.makeText(this, "Ticket purchased successfully!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, OrderScreen::class.java))
+            finish()
+        } else {
+            Toast.makeText(this, "Failed to purchase ticket!", Toast.LENGTH_SHORT).show()
+        }
     }
 }

@@ -1,21 +1,28 @@
 package com.example.cineeaseapp.screen
 
+import OrderScreen
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cineeaseapp.R
+import com.example.cineeaseapp.data.DatabaseHandlerFilm
+import com.example.cineeaseapp.data.DatabaseHandlerSnack
 import com.example.cineeaseapp.data.Snack
 
 class DetailSnackScreen : AppCompatActivity() {
+
+    private lateinit var snack: Snack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_snack_screen)
 
-        val snack = intent.getSerializableExtra("SNACK") as Snack
+        snack = intent.getSerializableExtra("SNACK") as Snack
 
         val snackImageView = findViewById<ImageView>(R.id.snack_image)
         val snackNameTextView = findViewById<TextView>(R.id.snack_name)
@@ -37,15 +44,25 @@ class DetailSnackScreen : AppCompatActivity() {
             totalTextView.text = getString(R.string.price_format, total)
         }
 
-        // Set default total price
         val initialTotal = snack.price
         totalTextView.text = getString(R.string.price_format, initialTotal)
 
         buyButton.setOnClickListener {
             val quantity = quantityPicker.value
             val total = quantity * snack.price
-            // TODO: Handle the purchase logic here
-            println("Purchased $quantity of ${snack.name} for $total")
+            saveSnackOrderToDatabase(quantity, total)
+        }
+    }
+
+    private fun saveSnackOrderToDatabase(quantity: Int, total: Int) {
+        val db = DatabaseHandlerSnack(this) // Use DatabaseHandlerSnack instead of DatabaseHandlerFilm
+        val orderId = db.addOrderSnack(snack.name, snack.image.toString(), quantity, snack.price) // Adjust the parameters according to your DatabaseHandlerSnack's addOrderSnack method
+        if (orderId != -1L) {
+            Toast.makeText(this, "Snack purchased successfully!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, OrderScreen::class.java))
+            finish()
+        } else {
+            Toast.makeText(this, "Failed to purchase snack!", Toast.LENGTH_SHORT).show()
         }
     }
 }

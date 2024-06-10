@@ -40,7 +40,7 @@ class DetailFilmScreen : AppCompatActivity() {
 
         btnBuyTicket.setOnClickListener {
             val intent = Intent(this, SeatSelectorScreen::class.java)
-            intent.putExtra(SeatSelectorScreen.EXTRA_FILM, film)
+            intent.putExtra(EXTRA_FILM, film) // Use the directly defined EXTRA_FILM constant
             startActivity(intent)
         }
     }

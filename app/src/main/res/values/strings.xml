@@ -73,5 +73,8 @@
     <string name="select_seat">Select Seat</string>
     <string name="continue0">Continue</string>
     <string name="layar_bioskop">Layar Bioskop</string>
+    <string name="order_history">Order History</string>
+    <string name="title">Title</string>
+    <string name="price">Price</string>
 
 </resources>

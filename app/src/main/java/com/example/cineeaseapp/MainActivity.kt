@@ -1,5 +1,6 @@
 package com.example.cineeaseapp
 
+import OrderScreen
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,6 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.example.cineeaseapp.databinding.ActivityMainBinding
 import com.example.cineeaseapp.screen.FilmScreen
-import com.example.cineeaseapp.screen.OrderScreen
 import com.example.cineeaseapp.screen.SnackScreen
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        val db = DatabaseHandler(this)
+//        db.deleteAllOrders()
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
