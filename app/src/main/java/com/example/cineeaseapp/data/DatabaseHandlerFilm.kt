@@ -72,7 +72,7 @@ class DatabaseHandlerFilm(context: Context) :
         return orderList
     }
 
-    fun deleteAllOrders() {
+    fun deleteAllOrdersTicket() {
         val db = this.writableDatabase
         db.delete(TABLE_ORDERS, null, null)
         db.close()

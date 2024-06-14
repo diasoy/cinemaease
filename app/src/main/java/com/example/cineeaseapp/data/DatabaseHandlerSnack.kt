@@ -73,7 +73,7 @@ class DatabaseHandlerSnack(context: Context) :
         return orderList
     }
 
-    fun deleteAllOrders() {
+    fun deleteAllOrdersSnack() {
         val db = this.writableDatabase
         db.delete(TABLE_ORDERS, null, null)
         db.close()

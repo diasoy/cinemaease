@@ -1,6 +1,5 @@
 package com.example.cineeaseapp.screen
 
-import OrderScreen
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -25,7 +24,7 @@ class SeatSelectorScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seat_selector)
 
-        film = intent.getParcelableExtra<Film>(EXTRA_FILM)!!
+        film = intent.getParcelableExtra(EXTRA_FILM)!!
 
         tvTotalPrice = findViewById(R.id.tv_total_price) // Initialize tvTotalPrice here
         val btnContinue: Button = findViewById(R.id.btn_continue)
@@ -51,7 +50,7 @@ class SeatSelectorScreen : AppCompatActivity() {
                     val seatText = "${(startingRow.toInt() + i).toChar()}${startingCol + j}"
                     text = seatText
                     setBackgroundColor(Color.WHITE)
-                    setTextSize(10f)
+                    textSize = 10f
                     setOnClickListener {
                         toggleSeatSelection(this)
                     }
