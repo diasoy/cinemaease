@@ -1,5 +1,6 @@
 package com.example.cineeaseapp.screen
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,13 +31,17 @@ class OrderScreen : Fragment() {
         val orderListSnack = dbSnack.getAllOrdersSnack().map { OrderItem.SnackOrder(it) }
         val orderList = orderListTicket + orderListSnack
 
-        orderAdapter = OrderAdapter(orderList)
+        orderAdapter = OrderAdapter(orderList) { order ->
+            val intent = Intent(context, OrderDetailScreen::class.java)
+            intent.putExtra(OrderDetailScreen.EXTRA_ORDER, order)
+            startActivity(intent)
+        }
 
         recyclerView.adapter = orderAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-//        dbFilm.deleteAllOrdersTicket()
 //        dbSnack.deleteAllOrdersSnack()
+//        dbFilm.deleteAllOrdersTicket()
 
         return view
     }

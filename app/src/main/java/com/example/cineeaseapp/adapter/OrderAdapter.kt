@@ -12,7 +12,8 @@ import com.example.cineeaseapp.data.OrderSnack
 import com.example.cineeaseapp.data.OrderTicket
 
 class OrderAdapter(
-    private val orderList: List<OrderItem>
+    private val orderList: List<OrderItem>,
+    private val onItemClick: (OrderItem) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -24,20 +25,13 @@ class OrderAdapter(
         return if (viewType == VIEW_TYPE_TICKET) {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_row_order_film, parent, false)
-            val ivFilmImage: ImageView = view.findViewById(R.id.iv_film_image)
-            val tvTitle: TextView = view.findViewById(R.id.tv_title)
-            val tvPrice: TextView = view.findViewById(R.id.tv_price)
-            TicketViewHolder(view, ivFilmImage, tvTitle, tvPrice)
+            TicketViewHolder(view, onItemClick)
         } else {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_row_order_snack, parent, false)
-            val ivSnackImage: ImageView = view.findViewById(R.id.iv_snack_image)
-            val tvTitle: TextView = view.findViewById(R.id.tv_title)
-            val tvPrice: TextView = view.findViewById(R.id.tv_price)
-            SnackViewHolder(view, ivSnackImage, tvTitle, tvPrice)
+            SnackViewHolder(view, onItemClick)
         }
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val orderItem = orderList[position]) {
@@ -59,10 +53,12 @@ class OrderAdapter(
 
     inner class TicketViewHolder(
         itemView: View,
-        private val ivFilmImage: ImageView,
-        private val tvTitle: TextView,
-        private val tvPrice: TextView,
+        private val onItemClick: (OrderItem) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
+        private val ivFilmImage: ImageView = itemView.findViewById(R.id.iv_film_image)
+        private val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
+        private val tvPrice: TextView = itemView.findViewById(R.id.tv_price)
+
         fun bind(order: OrderTicket) {
             val resId = itemView.context.resources.getIdentifier(order.movieImage, "drawable", itemView.context.packageName)
             if (resId != 0) {
@@ -72,15 +68,21 @@ class OrderAdapter(
             }
             tvTitle.text = order.movieTitle
             tvPrice.text = "Total Seat: ${order.seat}, Total Price: Rp. ${order.ticketPrice}"
+
+            itemView.setOnClickListener {
+                onItemClick(OrderItem.TicketOrder(order))
+            }
         }
     }
 
     inner class SnackViewHolder(
         itemView: View,
-        private val ivSnackImage: ImageView,
-        private val tvTitle: TextView,
-        private val tvPrice: TextView,
+        private val onItemClick: (OrderItem) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
+        private val ivSnackImage: ImageView = itemView.findViewById(R.id.iv_snack_image)
+        private val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
+        private val tvPrice: TextView = itemView.findViewById(R.id.tv_price)
+
         fun bind(order: OrderSnack) {
             val resId = itemView.context.resources.getIdentifier(order.snackImage, "drawable", itemView.context.packageName)
             if (resId != 0) {
@@ -90,6 +92,12 @@ class OrderAdapter(
             }
             tvTitle.text = order.snackName
             tvPrice.text = "Quantity: ${order.quantity}, Total Price: Rp. ${order.snackPrice}"
+
+            itemView.setOnClickListener {
+                onItemClick(OrderItem.SnackOrder(order))
+            }
         }
     }
+
+
 }

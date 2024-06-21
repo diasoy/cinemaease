@@ -2,80 +2,110 @@ package com.example.cineeaseapp.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DatabaseHandlerSnack(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 3 // Update to version 3
-        private const val DATABASE_NAME = "CineEaseDB"
-        private const val TABLE_ORDERS = "order_snack"
+        private const val DATABASE_VERSION = 1 // Increment this if youmodify the database schema later
+        private const val DATABASE_NAME = "snack_database"
+        private const val TABLE_ORDER_SNACK = "order_snack"
+
+        // Column names for the order_snack table
         private const val KEY_ID = "id"
-        private const val KEY_SNACK_NAME = "snack_name"
-        private const val KEY_SNACK_IMAGE = "snack_image"
         private const val KEY_QUANTITY = "quantity"
+        private const val KEY_TRANSACTION_NUMBER = "transaction_number"
+        private const val KEY_SNACK_IMAGE = "snack_image"
         private const val KEY_SNACK_PRICE = "snack_price"
+        private const val KEY_SNACK_NAME = "snack_name"
+        private const val KEY_TRANSACTION_TIME = "transaction_time"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val createOrdersTable =
-            ("CREATE TABLE $TABLE_ORDERS($KEY_ID INTEGER PRIMARY KEY,$KEY_SNACK_NAME TEXT,$KEY_SNACK_IMAGE TEXT,$KEY_QUANTITY INTEGER,$KEY_SNACK_PRICE INTEGER)")
-        db.execSQL(createOrdersTable)
+        // Create the order_snack table here
+        val createOrderSnackTable = ("CREATE TABLE " + TABLE_ORDER_SNACK + "("
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KEY_QUANTITY + " INTEGER,"
+                + KEY_TRANSACTION_NUMBER + " TEXT,"
+                + KEY_SNACK_IMAGE + " INTEGER,"
+                + KEY_SNACK_PRICE + " INTEGER,"
+                + KEY_SNACK_NAME + " TEXT,"
+                + KEY_TRANSACTION_TIME + " TEXT" + ")")
+        db.execSQL(createOrderSnackTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
-            db.execSQL("ALTER TABLE $TABLE_ORDERS ADD COLUMN $KEY_SNACK_IMAGE TEXT")
+            db.execSQL("ALTER TABLE $TABLE_ORDER_SNACK ADD COLUMN $KEY_SNACK_IMAGE TEXT")
         }
-        // Handle other upgrades here if needed
+        if (oldVersion < 4) {
+            db.execSQL("ALTER TABLE $TABLE_ORDER_SNACK ADD COLUMN $KEY_TRANSACTION_NUMBER TEXT")
+            db.execSQL("ALTER TABLE $TABLE_ORDER_SNACK ADD COLUMN $KEY_TRANSACTION_TIME TEXT")
+        }
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_ORDER_SNACK")
+        onCreate(db)
     }
 
-    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Handle downgrade logic here
-        if(newVersion < oldVersion){
-            db.execSQL("DROP TABLE IF EXISTS $TABLE_ORDERS")
-            onCreate(db)
-        }
-    }
-
-    fun addOrderSnack(snackName: String, snackImage: String, quantity: Int, snackPrice: Int): Long {
+    fun addOrderSnack(
+        quantity: Int,
+        transactionNumber:String,
+        snackImage: String,
+        snackPrice: Int,
+        snackName: String,
+        transactionTime: String
+    ): Long {
         val db = this.writableDatabase
-        val values = ContentValues()
-        values.put(KEY_SNACK_NAME, snackName)
-        values.put(KEY_SNACK_IMAGE, snackImage)
-        values.put(KEY_QUANTITY, quantity)
-        values.put(KEY_SNACK_PRICE, snackPrice)
-        val id = db.insert(TABLE_ORDERS, null, values)
+        val contentValues = ContentValues()
+        contentValues.put(KEY_QUANTITY, quantity)
+        contentValues.put(KEY_TRANSACTION_NUMBER, transactionNumber)
+        contentValues.put(KEY_SNACK_IMAGE, snackImage)
+        contentValues.put(KEY_SNACK_PRICE, snackPrice)
+        contentValues.put(KEY_SNACK_NAME, snackName)
+        contentValues.put(KEY_TRANSACTION_TIME, transactionTime)
+
+        val success = db.insert(TABLE_ORDER_SNACK, null, contentValues)
         db.close()
-        return id
+        return success
     }
 
     fun getAllOrdersSnack(): ArrayList<OrderSnack> {
         val orderList = ArrayList<OrderSnack>()
-        val selectQuery = "SELECT  * FROM $TABLE_ORDERS"
+        val selectQuery = "SELECT * FROM $TABLE_ORDER_SNACK"
         val db = this.readableDatabase
-        val cursor = db.rawQuery(selectQuery, null)
-        if (cursor.moveToFirst()) {
-            do {
-                val order = OrderSnack(
-                    id = cursor.getInt(cursor.getColumnIndex(KEY_ID)),
-                    snackName = cursor.getString(cursor.getColumnIndex(KEY_SNACK_NAME)) ?: "",
-                    snackImage = cursor.getString(cursor.getColumnIndex(KEY_SNACK_IMAGE)) ?: "",
-                    quantity = cursor.getInt(cursor.getColumnIndex(KEY_QUANTITY)),
-                    snackPrice = cursor.getInt(cursor.getColumnIndex(KEY_SNACK_PRICE))
-                )
-                orderList.add(order)
-            } while (cursor.moveToNext())
+        var cursor: Cursor? = null
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+            cursor?.let {
+                if (it.moveToFirst()) {
+                    do {
+                        val order = OrderSnack(
+                            snackName = it.getString(it.getColumnIndex(KEY_SNACK_NAME)) ?: "",
+                            snackImage = it.getString(it.getColumnIndex(KEY_SNACK_IMAGE)) ?: "",
+                            quantity = it.getInt(it.getColumnIndex(KEY_QUANTITY)),
+                            snackPrice = it.getInt(it.getColumnIndex(KEY_SNACK_PRICE)),
+                            transactionNumber = it.getString(it.getColumnIndex(KEY_TRANSACTION_NUMBER)) ?: "",
+                            transactionTime = it.getString(it.getColumnIndex(KEY_TRANSACTION_TIME)) ?: ""
+                        )
+                        orderList.add(order)
+                    } while (it.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseHandlerSnack", "Error while fetching all snack orders", e)
+        } finally {
+            cursor?.close()
+            db.close()
         }
-        cursor.close()
         return orderList
     }
 
     fun deleteAllOrdersSnack() {
         val db = this.writableDatabase
-        db.delete(TABLE_ORDERS, null, null)
+        db.delete(TABLE_ORDER_SNACK, null, null)
         db.close()
     }
 }

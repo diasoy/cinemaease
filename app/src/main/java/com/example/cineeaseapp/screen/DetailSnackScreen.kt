@@ -2,6 +2,7 @@ package com.example.cineeaseapp.screen
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.NumberPicker
@@ -10,15 +11,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cineeaseapp.R
 import com.example.cineeaseapp.data.DatabaseHandlerSnack
+import com.example.cineeaseapp.data.OrderSnack
 import com.example.cineeaseapp.data.Snack
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class DetailSnackScreen : AppCompatActivity() {
 
     private lateinit var snack: Snack
+    private lateinit var db: DatabaseHandlerSnack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_snack_screen)
+
+        db = DatabaseHandlerSnack(this)
 
         snack = intent.getSerializableExtra("SNACK") as Snack
 
@@ -53,14 +60,42 @@ class DetailSnackScreen : AppCompatActivity() {
     }
 
     private fun saveSnackOrderToDatabase(quantity: Int, total: Int) {
-        val db = DatabaseHandlerSnack(this) // Use DatabaseHandlerSnack instead of DatabaseHandlerFilm
-        val orderId = db.addOrderSnack(snack.name, snack.image.toString(), quantity, snack.price) // Adjust the parameters according to your DatabaseHandlerSnack's addOrderSnack method
-        if (orderId != -1L) {
-            Toast.makeText(this, "Snack purchased successfully!", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, OrderScreen::class.java))
-            finish()
-        } else {
-            Toast.makeText(this, "Failed to purchase snack!", Toast.LENGTH_SHORT).show()
+        val transactionNumber = (1000000000..9999999999).random().toString()
+
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val transactionTime = currentDateTime.format(formatter)
+
+        val orderSnack = OrderSnack(
+            quantity = quantity,
+            transactionNumber = transactionNumber,
+            snackImage = snack.image.toString(),
+            snackPrice = snack.price,
+            snackName = snack.name,
+            transactionTime = transactionTime
+        )
+
+        try {
+            val result = db.addOrderSnack(
+                orderSnack.quantity,
+                orderSnack.transactionNumber,
+                orderSnack.snackImage,
+                orderSnack.snackPrice,
+                orderSnack.snackName,
+                orderSnack.transactionTime
+            )
+
+            if (result != -1L) {
+                Toast.makeText(this, "Snack purchased successfully!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, OrderScreen::class.java))
+                finish()
+            } else {
+                Log.e("DetailSnackScreen", "Failed to insert snack order into database")
+                Toast.makeText(this, "Failed to purchase snack!", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e("DetailSnackScreen", "Error saving snack order: ${e.message}")
+            Toast.makeText(this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show()
         }
     }
 }

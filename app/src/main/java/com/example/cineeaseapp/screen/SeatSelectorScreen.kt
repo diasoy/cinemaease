@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.cineeaseapp.R
 import com.example.cineeaseapp.data.DatabaseHandlerFilm
 import com.example.cineeaseapp.data.Film
+import com.example.cineeaseapp.data.OrderTicket
 import com.example.cineeaseapp.screen.DetailFilmScreen.Companion.EXTRA_FILM
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class SeatSelectorScreen : AppCompatActivity() {
 
@@ -78,7 +81,6 @@ class SeatSelectorScreen : AppCompatActivity() {
         updateTotalPrice()
     }
 
-
     private fun updateTotalPrice() {
         val totalPrice = selectedSeats * film.harga
         tvTotalPrice.text = "Total Price: Rp. $totalPrice"
@@ -88,7 +90,28 @@ class SeatSelectorScreen : AppCompatActivity() {
         val db = DatabaseHandlerFilm(this)
         val selectedSeatString = selectedSeatSet.joinToString(", ") { it.text.toString() }
         val totalPrice = selectedSeats * film.harga
-        val orderId = db.addOrderTicket(film.judul, film.poster.toString(), selectedSeatString, totalPrice) // Convert film.poster to String
+
+        // Generate random transaction number (you may use a more sophisticated method)
+        val transactionNumber = (1000000000..9999999999).random().toString()
+
+        // Get current time in desired format for transactionTime
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val transactionTime = currentDateTime.format(formatter)
+
+        // Create OrderTicket object
+        val orderTicket = OrderTicket(
+            movieTitle = film.judul,
+            movieImage = film.poster.toString(),
+            seat = selectedSeatString,
+            ticketPrice = totalPrice,
+            transactionNumber = transactionNumber,
+            transactionTime = transactionTime
+        )
+
+        // Save order using DatabaseHandlerFilm
+        val orderId = db.addOrderTicket(orderTicket)
+
         if (orderId != -1L) {
             Toast.makeText(this, "Ticket purchased successfully!", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, OrderScreen::class.java))
