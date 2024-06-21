@@ -9,7 +9,7 @@ class DatabaseHandlerFilm(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 3 // Update to version 3
+        private const val DATABASE_VERSION = 3
         private const val DATABASE_NAME = "CineEaseDB"
         private const val TABLE_ORDERS = "order_ticket"
         private const val KEY_ID = "id"
