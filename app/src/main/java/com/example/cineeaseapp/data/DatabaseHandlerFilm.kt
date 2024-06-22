@@ -86,6 +86,28 @@ class DatabaseHandlerFilm(context: Context) :
         return orderList
     }
 
+    fun getAllTicketSales(): List<Laporan> {
+        val laporanList = mutableListOf<Laporan>()
+
+        val db = this.readableDatabase
+        val query = "SELECT $KEY_MOVIE_TITLE, SUM($KEY_TICKET_PRICE) as total FROM $TABLE_ORDERS GROUP BY $KEY_MOVIE_TITLE"
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val title = cursor.getString(cursor.getColumnIndex(KEY_MOVIE_TITLE))
+                val total = cursor.getInt(cursor.getColumnIndex("total")).toString()
+                val laporan = Laporan(title, total)
+                laporanList.add(laporan)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return laporanList
+    }
+
     fun deleteAllOrdersTicket() {
         val db = this.writableDatabase
         db.delete(TABLE_ORDERS, null, null)

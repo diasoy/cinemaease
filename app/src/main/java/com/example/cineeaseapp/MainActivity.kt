@@ -9,6 +9,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.example.cineeaseapp.databinding.ActivityMainBinding
 import com.example.cineeaseapp.screen.FilmScreen
+import com.example.cineeaseapp.screen.LaporanScreen
 import com.example.cineeaseapp.screen.OrderScreen
 import com.example.cineeaseapp.screen.SnackScreen
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_film -> selectedFragment = FilmScreen()
                 R.id.nav_snack -> selectedFragment = SnackScreen()
                 R.id.nav_order -> selectedFragment = OrderScreen()
+                R.id.nav_laporan -> selectedFragment = LaporanScreen()
             }
 
             supportFragmentManager.beginTransaction().replace(R.id.main, selectedFragment).commit()

@@ -103,6 +103,28 @@ class DatabaseHandlerSnack(context: Context) :
         return orderList
     }
 
+    fun getAllSnackSales(): List<Laporan> {
+        val laporanList = mutableListOf<Laporan>()
+
+        val db = this.readableDatabase
+        val query = "SELECT $KEY_SNACK_NAME, SUM($KEY_SNACK_PRICE * $KEY_QUANTITY) as total FROM $TABLE_ORDER_SNACK GROUP BY $KEY_SNACK_NAME"
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val title = cursor.getString(cursor.getColumnIndex(KEY_SNACK_NAME))
+                val total = cursor.getInt(cursor.getColumnIndex("total")).toString()
+                val laporan = Laporan(title, total)
+                laporanList.add(laporan)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return laporanList
+    }
+
     fun deleteAllOrdersSnack() {
         val db = this.writableDatabase
         db.delete(TABLE_ORDER_SNACK, null, null)
